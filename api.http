@@ -1,0 +1,159 @@
+@base = http://localhost:5000
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc4NjYzODc4LCJleHAiOjE3NzkyNjg2Nzh9.6m1gMgKOCxiDGcsS3nEV6aBbCH-S_t7H3rINVffmZCM
+
+### 1. Test serveur
+GET {{base}}/
+
+###
+
+### 2. Inscription
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "djibril@sndeals.sn",
+  "password": "123456",
+  "name": "Djibril",
+  "phone": "+221 77 000 00 00",
+  "location": "Dakar"
+}
+
+###
+
+### 3. Login → copie le token et remplace @token en haut
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "djibril@sndeals.sn",
+  "password": "123456"
+}
+
+###
+
+### 4. Mon profil (token requis)
+GET {{base}}/users/profile
+Authorization: Bearer {{token}}
+
+###
+
+### 5. Liste des catégories
+GET {{base}}/categories
+
+###
+
+### 6. Créer une catégorie (admin requis)
+POST {{base}}/categories
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Électronique",
+  "slug": "electronique",
+  "icon": "📱"
+}
+
+###
+
+### 7. Créer une annonce (token requis)
+POST {{base}}/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Samsung Galaxy A33",
+  "description": "Très bon état, peu utilisé",
+  "price": 85000,
+  "categoryId": 1,
+  "location": "Dakar"
+}
+
+###
+
+### 8. Liste des produits
+GET {{base}}/products
+
+###
+
+### 9. Ajouter un produit aux favoris
+POST http://localhost:5000/favoris/4
+Authorization: Bearer {{token}}
+
+###
+
+### 10. Mes favoris
+GET http://localhost:5000/favoris
+Authorization: Bearer {{token}}
+
+###
+
+### 11. Retirer un produit des favoris
+DELETE http://localhost:5000/favoris/4
+Authorization: Bearer {{token}}
+
+### 12. Upload une seule photo
+POST http://localhost:5000/upload/single
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+< C:\Users\PC\sndeals-backend\photo.jpg
+--boundary--
+
+###
+
+### 13. Upload photos sur un produit
+POST http://localhost:5000/upload/product/4
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="images"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+< C:\Users\PC\sndeals-backend\photo.jpg
+--boundary--
+### 21. Envoyer un message à un vendeur
+POST http://localhost:5000/messages/4
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "content": "Bonjour, est-ce que le prix est négociable ?"
+}
+
+###
+
+### 22. Mes conversations
+GET http://localhost:5000/messages/conversations
+Authorization: Bearer {{token}}
+
+###
+
+### 23. Messages d'une conversation
+GET http://localhost:5000/messages/conversation/1
+Authorization: Bearer {{token}}
+
+###
+
+### 24. Répondre dans une conversation
+POST http://localhost:5000/messages/conversation/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "content": "Oui je peux faire un geste sur le prix !"
+}
+### Créer un compte acheteur test
+POST http://localhost:5000/auth/register
+Content-Type: application/json
+
+{
+  "email": "acheteur@sndeals.sn",
+  "password": "123456",
+  "name": "Acheteur Test",
+  "location": "Dakar"
+}
